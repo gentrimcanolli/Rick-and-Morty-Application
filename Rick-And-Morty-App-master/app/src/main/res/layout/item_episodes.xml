@@ -1,0 +1,38 @@
+<layout>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/episodeCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="S01E02"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:id="@+id/episodeNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/episodeCountTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Pilot"
+        android:layout_marginTop="4dp"
+        />
+
+    <TextView
+        android:id="@+id/episodeDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/episodeNameTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="December 2, 2013"
+        android:layout_marginTop="4dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
