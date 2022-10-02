@@ -24,17 +24,4 @@ class Repository {
             .create(ApiService::class.java)
     }
 
-    fun getAllCharacters() : MutableLiveData<CharacterResponse>{
-        apiService.getCharacters()
-            .enqueue(object : retrofit2.Callback<CharacterResponse> {
-                override fun onResponse(call: Call<CharacterResponse>, response: Response<CharacterResponse>
-                ) {
-                    characters.value = response.body()
-                }
-                override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
-                    t.printStackTrace()
-                }
-           })
-        return characters
-    }
 }
