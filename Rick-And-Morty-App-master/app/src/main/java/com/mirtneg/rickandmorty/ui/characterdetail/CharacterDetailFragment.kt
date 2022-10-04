@@ -10,22 +10,23 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mirtneg.rickandmorty.R
-import com.mirtneg.rickandmorty.data.models.Character
+
 import com.mirtneg.rickandmorty.databinding.FragmentCharacterDetailBinding
 import com.squareup.picasso.Picasso
 
 
 class CharacterDetailFragment : Fragment() {
     lateinit var viewModel: CharacterDetailViewModel
-    private lateinit var binding : FragmentCharacterDetailBinding
-
+    private lateinit var binding: FragmentCharacterDetailBinding
+    private lateinit var adapter: EpisodesAdapter
     private val args by navArgs<CharacterDetailFragmentArgs>()
 
-    lateinit var adapter : EpisodesAdapter
-
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentCharacterDetailBinding.inflate(inflater,container,false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentCharacterDetailBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[CharacterDetailViewModel::class.java]
 
         return binding.root
@@ -34,14 +35,12 @@ class CharacterDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         adapter = EpisodesAdapter(this::onEpisodeClick)
         viewModel.getCharacterById(args.characterId)
         binding.episodesRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
         binding.episodesRecyclerView.adapter = adapter
-        viewModel.characterResponse.observe(viewLifecycleOwner){
-            with(it){
+        viewModel.characterResponse.observe(viewLifecycleOwner) {
+            with(it) {
                 binding.characterName.text = name
                 Picasso.get().load(image).into(binding.characterImage)
 
@@ -62,22 +61,19 @@ class CharacterDetailFragment : Fragment() {
 
                 binding.typeInfo.tagTextView.text = "Type"
                 binding.typeInfo.dataTextView.text = type
-
             }
         }
-        adapter
-        viewModel.episodeResponse.observe(viewLifecycleOwner){
+
+        viewModel.episodeResponse.observe(viewLifecycleOwner) {
             adapter.episodes = it
         }
 
         binding.backButton.setOnClickListener {
             findNavController().navigate(R.id.action_characterDetailFragment_to_homeFragment)
         }
-
-
     }
 
-    fun onEpisodeClick(episodeId : String){
+    private fun onEpisodeClick(episodeId: String) {
         println("Clicked Episode $episodeId")
     }
 }

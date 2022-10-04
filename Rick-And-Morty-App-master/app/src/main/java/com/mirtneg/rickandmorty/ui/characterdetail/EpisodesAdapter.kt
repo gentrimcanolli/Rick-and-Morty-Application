@@ -3,12 +3,9 @@ package com.mirtneg.rickandmorty.ui.characterdetail
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mirtneg.rickandmorty.data.models.Character
 import com.mirtneg.rickandmorty.data.models.Episode
 import com.mirtneg.rickandmorty.databinding.ItemEpisodesBinding
-import com.mirtneg.rickandmorty.databinding.ListItemCharacterBinding
-import com.mirtneg.rickandmorty.ui.home.CharactersAdapter
-import com.squareup.picasso.Picasso
+
 
 class EpisodesAdapter(val itemClick: (episodeId: String) -> Unit) :
     RecyclerView.Adapter<EpisodesAdapter.ViewHolder>() {

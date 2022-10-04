@@ -9,11 +9,13 @@ import com.squareup.picasso.Picasso
 
 class CharactersAdapter(val itemClick: (characterId : String) -> Unit) :
     RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
+
     var characterItem : List<Character> = mutableListOf()
     set(value){
         field = value
         notifyDataSetChanged()
     }
+
     class ViewHolder(val binding: ListItemCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

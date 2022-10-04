@@ -84,7 +84,7 @@ class HomeFragment : Fragment() {
 
     private fun itemClick(characterId : String) {
         val bundle = Bundle()
-        bundle.putString("character_id" , characterId)
+        bundle.putString("character_id", characterId)
         findNavController().navigate(R.id.action_homeFragment_to_characterDetailFragment, bundle)
     }
 }
