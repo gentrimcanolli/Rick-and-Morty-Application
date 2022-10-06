@@ -21,12 +21,10 @@ import com.mirtneg.rickandmorty.ui.characterdetail.EpisodesAdapter
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
-
     lateinit var viewModel: HomeViewModel
-
-    lateinit var adapter : CharactersAdapter
-
-    lateinit var epAdapter : EpisodesAdapter
+    lateinit var adapter: CharactersAdapter
+    lateinit var dialog: Dialog
+    lateinit var dialogBinding: DialogAdvancedFiltersBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,31 +38,41 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getCharacters()
+
+        setupFilterDialog()
 
         binding.filterButton.setOnClickListener {
             showDetailedFilterDialog()
         }
-        viewModel.getCharacters()
 
         binding.characterList.layoutManager = LinearLayoutManager(requireActivity())
         adapter = CharactersAdapter(this::itemClick)
         binding.characterList.adapter = adapter
 
         viewModel.charactersList.observe(viewLifecycleOwner, Observer<List<Character>>() {
-           adapter.characterItem = it
+            adapter.characterItem = it
+        })
+
+        viewModel.filterResultsList.observe(viewLifecycleOwner, Observer<List<Character>>() {
+            adapter.characterItem = it
         })
 
         binding.searchEditText.doOnTextChanged { text, start, before, count ->
-            val searchResult = mutableListOf<Character>()
             viewModel.charactersList.value?.let { safeCharacter ->
-                adapter.characterItem = safeCharacter.filter { character -> character.name.startsWith(text.toString(), true) }
+                adapter.characterItem = safeCharacter.filter { character ->
+                    character.name.startsWith(
+                        text.toString(),
+                        true
+                    )
+                }
             }
         }
     }
 
-    private fun showDetailedFilterDialog() {
-        val dialogBinding = DialogAdvancedFiltersBinding.inflate(requireActivity().layoutInflater)
-        val dialog = Dialog(requireActivity())
+    private fun setupFilterDialog() {
+        dialogBinding = DialogAdvancedFiltersBinding.inflate(requireActivity().layoutInflater)
+        dialog = Dialog(requireActivity())
         dialog.setContentView(dialogBinding.root)
 
         val layoutParams = dialog.window!!.attributes
@@ -76,13 +84,37 @@ class HomeFragment : Fragment() {
         }
 
         dialogBinding.applyButton.setOnClickListener {
+
+            if (viewModel.showingSearchResults) {
+                viewModel.showingSearchResults = false
+                viewModel.charactersList.value?.let {
+                    adapter.characterItem = it
+                }
+
+                dialogBinding.specieEditText.setText("")
+                dialogBinding.genderEditText.setText("")
+                dialogBinding.statusEditText.setText("")
+            } else {
+                viewModel.filterCharacters(
+                    dialogBinding.specieEditText.text.toString(),
+                    dialogBinding.genderEditText.text.toString(),
+                    dialogBinding.statusEditText.text.toString()
+                )
+            }
             dialog.dismiss()
         }
+    }
 
+    private fun showDetailedFilterDialog() {
+        if (viewModel.showingSearchResults) {
+            dialogBinding.applyButton.text = "Apply"
+        } else {
+            dialogBinding.applyButton.text = "Clear Filters"
+        }
         dialog.show()
     }
 
-    private fun itemClick(characterId : String) {
+    private fun itemClick(characterId: String) {
         val bundle = Bundle()
         bundle.putString("character_id", characterId)
         findNavController().navigate(R.id.action_homeFragment_to_characterDetailFragment, bundle)

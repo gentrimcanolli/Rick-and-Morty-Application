@@ -23,7 +23,5 @@ class Repository {
             .build()
             .create(ApiService::class.java)
     }
+
 }
-
-
-

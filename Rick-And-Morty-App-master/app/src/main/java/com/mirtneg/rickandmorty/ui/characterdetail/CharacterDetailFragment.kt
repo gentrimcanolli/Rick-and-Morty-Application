@@ -68,12 +68,20 @@ class CharacterDetailFragment : Fragment() {
             adapter.episodes = it
         }
 
-        binding.backButton.setOnClickListener {
-            findNavController().navigate(R.id.action_characterDetailFragment_to_homeFragment)
+        binding.backButton.setOnClickListener() {
+
         }
+
+
     }
 
     private fun onEpisodeClick(episodeId: String) {
+        val bundle = Bundle()
+        bundle.putString("episode_id", episodeId)
         println("Clicked Episode $episodeId")
+        findNavController().navigate(
+            R.id.action_characterDetailFragment_to_episodeDetailFragment,
+            bundle
+        )
     }
 }

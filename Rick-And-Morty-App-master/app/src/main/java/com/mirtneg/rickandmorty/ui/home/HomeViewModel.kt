@@ -10,12 +10,18 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class HomeViewModel : ViewModel() {
-    val charactersList : MutableLiveData<List<Character>> = MutableLiveData<List<Character>>()
-    val repository = Repository()
 
-    fun getCharacters(){
+    var showingSearchResults: Boolean = false
+        get() = field
+        set(value) { field = value }
+
+    val charactersList: MutableLiveData<List<Character>> = MutableLiveData<List<Character>>()
+    val filterResultsList: MutableLiveData<List<Character>> = MutableLiveData<List<Character>>()
+    private val repository = Repository()
+
+    fun getCharacters() {
         repository.apiService.getCharacters()
-            .enqueue(object : Callback<CharacterResponse>{
+            .enqueue(object : Callback<CharacterResponse> {
                 override fun onResponse(
                     call: Call<CharacterResponse>,
                     response: Response<CharacterResponse>
@@ -29,4 +35,33 @@ class HomeViewModel : ViewModel() {
 
             })
     }
+
+    fun filterCharacters(
+        species: String? = null,
+        gender: String? = null,
+        status: String? = null
+    ) {
+        var url = "https://rickandmortyapi.com/api/character/?"
+        url += "&species=$species"
+        url += "&gender=$gender"
+        url += "&status=$status"
+
+        repository.apiService.filterCharacters(url)
+            .enqueue(object : Callback<CharacterResponse> {
+                override fun onResponse(
+                    call: Call<CharacterResponse>,
+                    response: Response<CharacterResponse>
+                ) {
+                    filterResultsList.value = response.body()?.results
+                }
+
+                override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
+                    t.printStackTrace()
+                }
+
+            })
+
+    }
+
+
 }
