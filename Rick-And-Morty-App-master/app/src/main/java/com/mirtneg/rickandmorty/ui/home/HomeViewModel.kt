@@ -27,6 +27,7 @@ class HomeViewModel : ViewModel() {
                     response: Response<CharacterResponse>
                 ) {
                     charactersList.value = response.body()?.results
+                    
                 }
 
                 override fun onFailure(call: Call<CharacterResponse>, t: Throwable) {
@@ -52,6 +53,7 @@ class HomeViewModel : ViewModel() {
                     call: Call<CharacterResponse>,
                     response: Response<CharacterResponse>
                 ) {
+                    showingSearchResults = true;
                     filterResultsList.value = response.body()?.results
                 }
 
